@@ -1,22 +1,17 @@
 function d = getdict
 % Dictionary of NIFTI stuff
-% _______________________________________________________________________
-% Copyright (C) 2008 Wellcome Trust Centre for Neuroimaging
+%__________________________________________________________________________
+% Copyright (C) 2005-2017 Wellcome Trust Centre for Neuroimaging
 
 %
-% Id: getdict.m 1143 2008-02-07 19:33:33Z spm 
-
-%
-% niftilib $Id$
-%
-
+% $Id: getdict.m 7147 2017-08-03 14:07:01Z spm $
 
 
 persistent dict;
-if ~isempty(dict),
+if ~isempty(dict)
     d = dict;
     return;
-end;
+end
 
 % Datatype
 t = true;
@@ -51,7 +46,7 @@ dtype = struct(...
     'unsigned' ,table(:,8),...
     'min',-Inf,'max',Inf',...
     'supported',table(:,9));
-for i=1:length(dtype),
+for i=1:length(dtype)
     if dtype(i).isint
         if dtype(i).unsigned
             dtype(i).min =  0;
@@ -59,9 +54,9 @@ for i=1:length(dtype),
         else
             dtype(i).min = -2^(8*dtype(i).size-1);
             dtype(i).max =  2^(8*dtype(i).size-1)-1;
-        end;
-    end;
-end;
+        end
+    end
+end
 % Intent
 table = {...
     0   ,'NONE'         ,'None',{}
@@ -92,15 +87,25 @@ table = {...
     24  ,'LOG10PVAL'    ,'Log_10 P-value',{}
     1001,'ESTIMATE'     ,'Estimate',{}
     1002,'LABEL'        ,'Label index',{}
-    1003,'NEURONAMES'   ,'NeuroNames index',{}
-    1004,'MATRIX'       ,'General matrix',{'M','N'}
-    1005,'MATRIX_SYM'   ,'Symmetric matrix',{}
-    1006,'DISPLACEMENT' ,'Displacement vector',{}
+    1003,'NEURONAME'    ,'NeuroNames index',{}
+    1004,'GENMATRIX'    ,'General matrix',{'M','N'}
+    1005,'SYMMATRIX'    ,'Symmetric matrix',{}
+    1006,'DISPVECT'     ,'Displacement vector',{}
     1007,'VECTOR'       ,'Vector',{}
-    1008,'POINTS'       ,'Pointset',{}
+    1008,'POINTSET'     ,'Pointset',{}
     1009,'TRIANGLE'     ,'Triangle',{}
     1010,'QUATERNION'   ,'Quaternion',{}
     1011,'DIMLESS'      ,'Dimensionless',{}
+    2001,'TIME_SERIES'  ,'Time series',{}
+    2002,'NODE_INDEX'   ,'Node index',{}
+    2003,'RGB_VECTOR'   ,'RGB triplet',{}
+    2004,'RGBA_VECTOR'  ,'RGBA vector',{}
+    2005,'SHAPE'        ,'Shape',{}
+    3001,'CONNECTIVITY_DENSE'                  ,'Dense connectivity',{}
+    3002,'CONNECTIVITY_DENSE_TIME'             ,'Dense time series',{}
+    3003,'CONNECTIVITY_PARCELLATED'            ,'Parcellated connectivity',{}
+    3004,'CONNECTIVITY_PARCELLATED_TIME'       ,'Parcellated time series',{}
+    3005,'CONNECTIVITY_CONNECTIVITY_TRAJECTORY','Trajectory connectivity',{}
 };
 intent = struct('code',table(:,1),'label',table(:,2),...
     'fullname',table(:,3),'param',table(:,4));
@@ -153,6 +158,6 @@ dict = struct('dtype',dtype,'intent',intent,'units',units,...
 d = dict;
 return;
 
-function varargout = crash(varargin)
-error('There is a NIFTI-1 data format problem (an invalid datatype).');
 
+function varargout = crash(varargin)
+error('There is a NIFTI data format problem (an invalid datatype).');
