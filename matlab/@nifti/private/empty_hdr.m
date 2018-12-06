@@ -1,20 +1,15 @@
-function hdr = empty_hdr
-% Create an empty NIFTI-1 header
+function hdr = empty_hdr(fmt)
+% Create an empty NIFTI header
 % FORMAT hdr = empty_hdr
-% _______________________________________________________________________
-% Copyright (C) 2008 Wellcome Trust Centre for Neuroimaging
+%__________________________________________________________________________
+% Copyright (C) 2005-2017 Wellcome Trust Centre for Neuroimaging
 
 %
-% Id: empty_hdr.m 1143 2008-02-07 19:33:33Z spm 
-
-%
-% niftilib $Id$
-%
+% $Id: empty_hdr.m 7147 2017-08-03 14:07:01Z spm $
 
 
-
-org = niftistruc;
-for i=1:length(org),
-    hdr.(org(i).label) = org(i).def;
-end;
-
+if ~nargin, fmt = 'nifti1'; end
+org = niftistruc(fmt);
+for i=1:length(org)
+    hdr.(org(i).label) = feval(org(i).dtype.conv,org(i).def);
+end

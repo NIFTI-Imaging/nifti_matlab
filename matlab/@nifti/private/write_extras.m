@@ -1,41 +1,28 @@
 function extras = write_extras(fname,extras)
 % Write extra bits of information
-%_______________________________________________________________________
-% Copyright (C) 2008 Wellcome Trust Centre for Neuroimaging
+%__________________________________________________________________________
+% Copyright (C) 2005-2017 Wellcome Trust Centre for Neuroimaging
 
 %
-% Id: write_extras.m 1143 2008-02-07 19:33:33Z spm 
-
-%
-% niftilib $Id$
-%
+% $Id: write_extras.m 7147 2017-08-03 14:07:01Z spm $
 
 
+if ~isstruct(extras) || isempty(fieldnames(extras))
+    return;
+end
 
 [pth,nam,ext] = fileparts(fname);
 switch ext
-case {'.hdr','.img','.nii'}
-    mname = fullfile(pth,[nam '.mat']);
-case {'.HDR','.IMG','.NII'}
-    mname = fullfile(pth,[nam '.MAT']);
-otherwise
-    mname = fullfile(pth,[nam '.mat']);
+    case {'.hdr','.img','.nii'}
+        mname = fullfile(pth,[nam '.mat']);
+    case {'.HDR','.IMG','.NII'}
+        mname = fullfile(pth,[nam '.MAT']);
+    otherwise
+        mname = fullfile(pth,[nam '.mat']);
 end
-if isstruct(extras) && ~isempty(fieldnames(extras)),
-    savefields(mname,extras);
-end;
-
-function savefields(fnam,p)
-if length(p)>1, error('Can''t save fields.'); end;
-fn = fieldnames(p);
-for i_=1:length(fn),
-    eval([fn{i_} '= p.' fn{i_} ';']);
-end;
-if str2num(version('-release'))>=14,
-    fn = {'-V6',fn{:}};
-end;
-if numel(fn)>0,
-    save(fnam,fn{:});
-end;
-return;
-
+try
+    opt = spm_get_defaults('mat.format');
+catch
+    opt = '-v6';
+end
+save(mname,'-struct','extras', opt);
